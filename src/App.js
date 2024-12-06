@@ -4,8 +4,17 @@ import './App.css';
 import logo from './logo.png';
 
 function App() {
-	const [input, setInput] = useState();
-	const [image, setImage] = useState();
+	const [prompt, setPrompt] = useState();
+	const [images, setImages] = useState([
+		{
+			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
+			'prompt': 'A kitten',
+		},
+		{
+			'image': 'https://images.nightcafe.studio/jobs/czaaLxwVb4dbpTkktTdE/czaaLxwVb4dbpTkktTdE--3--4lgpv.jpg',
+			'prompt': 'White dog flying in the sky'
+		},
+	]);
 
 	const generateStory = async () => {
 		const apiUrl = 'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell';
@@ -15,7 +24,7 @@ function App() {
 			const response = await axios.post(
 				apiUrl,
 				{
-					inputs: input,
+					inputs: prompt,
 				},
 				{
 					headers: {
@@ -27,7 +36,7 @@ function App() {
 			);
 
 			const imageUrl = URL.createObjectURL(response.data);
-			setImage(imageUrl);
+			setImages(imageUrl);
 			console.log(response.data);
 		} catch (error) {
 			// Handle Error
@@ -50,22 +59,32 @@ function App() {
                         type="text"
                         placeholder="What are you thinking of..."
                         className="prompt-input"
+                        value={prompt}
+                        onChange={e => setPrompt(e.target.value)}
                     />
-                    <button className="generate-btn" aria-label="Generate image from text">
+                    <button onClick={generateStory} className="generate-btn" aria-label="Generate image from text">
                         Generate Image
                     </button>
                 </section>
 
                 <section className="gallery">
                 	<h2 className="visually-hidden">Generated Images</h2>
-                	<article className="image-card" aria-label="Generated Image 1">
-                        <img
-                            src="/path/to/image1.jpg"
-                            alt="Generated visual based on prompt"
-                            className="generated-image"
-                        />
-                        <p>A serene mountain landscape</p>
-                    </article>
+                	{
+                		images.map(image => {
+                			return (
+                				<>
+                					<article className="image-card" aria-label="Generated Image 1">
+				                        <img
+				                            src={image.image}
+				                            alt="Generated visual based on prompt"
+				                            className="generated-image"
+				                        />
+				                        <p>{image.prompt}</p>
+				                    </article>
+                				</>
+                			)
+                		})
+                	}
                 </section>
             </main>
 
