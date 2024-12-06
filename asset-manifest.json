@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/artify/static/css/main.89211d74.css",
-    "main.js": "/artify/static/js/main.3dafce3f.js",
+    "main.js": "/artify/static/js/main.e9f9deba.js",
     "static/js/453.b3383602.chunk.js": "/artify/static/js/453.b3383602.chunk.js",
     "static/media/logo.png": "/artify/static/media/logo.74020de7f20bba9ecc2a.png",
     "index.html": "/artify/index.html",
     "main.89211d74.css.map": "/artify/static/css/main.89211d74.css.map",
-    "main.3dafce3f.js.map": "/artify/static/js/main.3dafce3f.js.map",
+    "main.e9f9deba.js.map": "/artify/static/js/main.e9f9deba.js.map",
     "453.b3383602.chunk.js.map": "/artify/static/js/453.b3383602.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.89211d74.css",
-    "static/js/main.3dafce3f.js"
+    "static/js/main.e9f9deba.js"
   ]
 }
