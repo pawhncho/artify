@@ -47,6 +47,13 @@ body {
     gap: 15px;
 }
 
+.input-error {
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ff4b2b;
+}
+
 .prompt-input {
     width: 100%;
     padding: 15px;
@@ -100,7 +107,7 @@ body {
 .generated-image {
     width: 100%;
     border-radius: 8px;
-    margin-bottom: 5px;
+    object-fit: cover;
 }
 
 .image-card p {
