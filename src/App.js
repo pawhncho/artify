@@ -71,7 +71,7 @@ function App() {
 	return (
 		<div className="app">
 			<header className="hero">
-                <h1 className="app-title">Artify-AI</h1>
+                <h1 className="app-title">Artify-AI | GA</h1>
                 <p className="app-description">
                     Turn your ideas into stunning visuals with our AI-powered app.
                 </p>
