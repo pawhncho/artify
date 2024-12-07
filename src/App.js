@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import ReactGA from "react-ga4";
 import './App.css';
 import logo from './logo.png';
 
+ReactGA.initialize("G-6ZBCKLMD0R");
+ReactGA.send("pageview");
+
 function App() {
-	const [prompt, setPrompt] = useState();
+	const [prompt, setPrompt] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
 	const [images, setImages] = useState([
@@ -12,17 +16,25 @@ function App() {
 			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
 			'prompt': 'A kitten',
 		},
-		{
-			'image': 'https://images.nightcafe.studio/jobs/czaaLxwVb4dbpTkktTdE/czaaLxwVb4dbpTkktTdE--3--4lgpv.jpg',
-			'prompt': 'White dog flying in the sky'
-		},
 	]);
 
-	const generateStory = async () => {
+	const generate = async () => {
+		setLoading(true);
+		setError('');
+
+		if (prompt.length <= 2) {
+			setError('Text must be more than 2 letters.');
+			setLoading(false);
+			return;
+		};
+
+		ReactGA.event({
+			category: "User Interaction",
+			action: "Clicked Generate Image Button",
+		});
+
 		const apiUrl = 'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell';
 		const apiToken = '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';
-		setLoading(true);
-		setError();
 
 		try {
 			const response = await axios.post(
@@ -71,7 +83,7 @@ function App() {
 	return (
 		<div className="app">
 			<header className="hero">
-                <h1 className="app-title">Artify-AI | GA</h1>
+                <h1 className="app-title">Artify-AI</h1>
                 <p className="app-description">
                     Turn your ideas into stunning visuals with our AI-powered app.
                 </p>
@@ -82,17 +94,35 @@ function App() {
             		<div className="input-error">
             			{error}
             		</div>
-                    <input
-                        id="prompt"
-                        type="text"
-                        placeholder="What are you thinking of..."
-                        className="prompt-input"
-                        value={prompt}
-                        onChange={e => setPrompt(e.target.value)}
-                    />
-                    <button onClick={generateStory} className="generate-btn" aria-label="Generate image from text">
-                        Generate Image
-                    </button>
+                    {
+                    	loading ?
+                    	<input
+	                        id="prompt"
+	                        type="text"
+	                        placeholder="What are you thinking of..."
+	                        className="prompt-input"
+	                        value={prompt}
+	                        onChange={e => setPrompt(e.target.value)}
+	                        disabled
+	                    /> :
+	                    <input
+	                        id="prompt"
+	                        type="text"
+	                        placeholder="What are you thinking of..."
+	                        className="prompt-input"
+	                        value={prompt}
+	                        onChange={e => setPrompt(e.target.value)}
+	                    />
+                    }
+                    {
+                    	loading ?
+                    	<button onClick={generate} className="generate-btn" aria-label="Generate image from text" disabled>
+	                        <div className="generate-btn-loader"></div>
+	                    </button> :
+	                    <button onClick={generate} className="generate-btn" aria-label="Generate image from text">
+	                        Generate Image
+	                    </button>
+                    }
                 </section>
 
                 <section className="gallery">
