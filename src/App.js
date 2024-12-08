@@ -92,9 +92,9 @@ function App() {
 			<div className="app">
 				<main>
 					<div className="not-supportive">
-						<div class="icon">📱</div>
-						<h1 class="message">Screen Size Not Supported</h1>
-						<p class="detail">
+						<div className="icon">📱</div>
+						<h1 className="message">Screen Size Not Supported</h1>
+						<p className="detail">
 							This app works on devices with smaller screens.
 							Please switch to a mobile or tablet device for better experience.
 						</p>
