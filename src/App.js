@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ReactGA from 'react-ga4';
 import './App.css';
@@ -8,7 +8,7 @@ ReactGA.initialize('G-6ZBCKLMD0R');
 ReactGA.send('pageview');
 
 function App() {
-	const [pageSize, setPageSize] = useState();
+	const pageSize = useRef(window.innerWidth);
 	const [prompt, setPrompt] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
@@ -21,9 +21,9 @@ function App() {
 
 	useEffect(() => {
 		window.addEventListener('resize', () => {
-			setPageSize(window.innerWidth);
+			pageSize.current = window.innerWidth;
 		});
-	}, []);
+	}, [pageSize]);
 
 	const generate = async () => {
 		setLoading(true);
@@ -87,7 +87,7 @@ function App() {
 		setLoading(false);
 	};
 
-	if (pageSize >= 600) {
+	if (pageSize.current >= 600) {
 		return (
 			<div className="app">
 				<main>
