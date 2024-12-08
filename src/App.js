@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ReactGA from "react-ga4";
+import ReactGA from 'react-ga4';
 import './App.css';
 import logo from './logo.png';
 
-ReactGA.initialize("G-6ZBCKLMD0R");
-ReactGA.send("pageview");
+ReactGA.initialize('G-6ZBCKLMD0R');
+ReactGA.send('pageview');
 
 function App() {
+	const [pageSize, setPageSize] = useState();
 	const [prompt, setPrompt] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
@@ -17,6 +18,12 @@ function App() {
 			'prompt': 'A kitten',
 		},
 	]);
+
+	useEffect(() => {
+		window.addEventListener('resize', () => {
+			setPageSize(window.innerWidth);
+		});
+	}, []);
 
 	const generate = async () => {
 		setLoading(true);
@@ -29,8 +36,8 @@ function App() {
 		};
 
 		ReactGA.event({
-			category: "User Interaction",
-			action: "Clicked Generate Image Button",
+			category: 'User Interaction',
+			action: 'Clicked Generate Image Button',
 		});
 
 		const apiUrl = 'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell';
@@ -45,7 +52,7 @@ function App() {
 				{
 					headers: {
 						Authorization: `Bearer ${apiToken}`,
-						"Cache-Control": "no-cache",
+						'Cache-Control': 'no-cache',
 					},
 					responseType: 'blob',
 				},
@@ -80,12 +87,30 @@ function App() {
 		setLoading(false);
 	};
 
+	if (pageSize >= 600) {
+		return (
+			<div className="app">
+				<main>
+					<div className="not-supportive">
+						<div class="icon">📱</div>
+						<h1 class="message">Screen Size Not Supported</h1>
+						<p class="detail">
+							This app works on devices with smaller screens.
+							Please switch to a mobile or tablet device for better experience.
+						</p>
+					</div>
+				</main>
+			</div>
+		);
+	};
+
 	return (
 		<div className="app">
 			<header className="hero">
                 <h1 className="app-title">Artify-AI</h1>
                 <p className="app-description">
-                    Turn your ideas into stunning visuals with our AI-powered app.
+                    Transform your imagination into breathtaking visuals with <b>Artify-AI</b>,
+                    the cutting-edge AI-powered app!
                 </p>
             </header>
 
@@ -97,7 +122,6 @@ function App() {
                     {
                     	loading ?
                     	<input
-	                        id="prompt"
 	                        type="text"
 	                        placeholder="What are you thinking of..."
 	                        className="prompt-input"
@@ -106,7 +130,6 @@ function App() {
 	                        disabled
 	                    /> :
 	                    <input
-	                        id="prompt"
 	                        type="text"
 	                        placeholder="What are you thinking of..."
 	                        className="prompt-input"
@@ -116,10 +139,10 @@ function App() {
                     }
                     {
                     	loading ?
-                    	<button onClick={generate} className="generate-btn" aria-label="Generate image from text" disabled>
+                    	<button onClick={generate} className="generate-btn" aria-label="Text to Image" disabled>
 	                        <div className="generate-btn-loader"></div>
 	                    </button> :
-	                    <button onClick={generate} className="generate-btn" aria-label="Generate image from text">
+	                    <button onClick={generate} className="generate-btn" aria-label="Text to Image">
 	                        Generate Image
 	                    </button>
                     }
@@ -129,18 +152,7 @@ function App() {
                 	<h2 className="visually-hidden">Generated Images</h2>
                 	{
                 		images.slice().reverse().map(image => {
-                			return (
-                				<>
-                					<article className="image-card" aria-label="Generated Image 1">
-				                        <img
-				                            src={image.image}
-				                            alt="Generated visual based on prompt"
-				                            className="generated-image"
-				                        />
-				                        <p>{image.prompt}</p>
-				                    </article>
-                				</>
-                			)
+                			return <Article image={image} />
                 		})
                 	}
                 </section>
@@ -152,6 +164,28 @@ function App() {
             	</p>
             </footer>
 		</div>
+	);
+};
+
+function Article({ image }) {
+	const [loading, setLoading] = useState(true);
+
+	return (
+		<article className="image-card" aria-label="Generated Image">
+			<img
+				src={image.image}
+				alt={image.prompt}
+				className={`generated-image ${loading && 'loading'}`}
+				onLoad={e => setLoading(false)}
+			/>
+			{
+				loading &&
+				<div className="generated-image">
+					<div className="image-loader"></div>
+				</div>
+			}
+			<p>{image.prompt}</p>
+		</article>
 	);
 };
 

@@ -27,7 +27,7 @@ input {
 .hero {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     color: #fff;
-    padding: 40px 50px;
+    padding: 40px 20px;
     border-radius: 15px;
     margin-bottom: 40px;
     box-shadow: 0 0 20px #6a11cb;
@@ -35,12 +35,14 @@ input {
 
 .app-title {
     margin: 0;
-    font-weight: bold;
+    font-size: 2.4rem;
+    font-weight: 600;
+    text-shadow: 0px 0px 10px #fff;
 }
 
 .app-description {
     font-size: 1rem;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 /* Input Section */
@@ -131,6 +133,24 @@ input {
     width: 100%;
     border-radius: 8px;
     object-fit: cover;
+    min-height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.generated-image.loading {
+    display: none;
+}
+
+.image-loader {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid #ff416c;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 .image-card p {
@@ -152,4 +172,47 @@ input {
 .footer p {
     margin: 0;
     font-size: 0.9rem;
+}
+
+/* Not Supportive */
+.not-supportive {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.not-supportive .icon {
+    font-size: 5rem;
+    animation: pulse 2s infinite;
+    margin-bottom: 1rem;
+}
+
+.not-supportive .message {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.not-supportive .detail {
+    font-size: 1rem;
+    opacity: 0.8;
+    max-width: 500px;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    40%, 50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
 }
