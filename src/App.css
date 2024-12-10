@@ -26,7 +26,8 @@ input {
 .hero {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
     color: #fff;
-    padding: 60px 20px;
+    padding: 40px 20px;
+    text-align: left;
 }
 
 .app-title {
@@ -34,11 +35,12 @@ input {
     font-size: 2.4rem;
     font-weight: 600;
     text-shadow: 0px 0px 10px #fff;
+    border-bottom: 1px solid #fff;
 }
 
 .app-description {
     font-size: 1rem;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 /* Input Section */
@@ -52,6 +54,7 @@ input {
     justify-content: center;
     gap: 15px;
     background: #1e1e2f;
+    z-index: 100;
 }
 
 .input-error {
@@ -122,22 +125,21 @@ input {
 }
 
 .image-card {
-    background: #29293d;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    padding: 15px;
+    position: relative;
     text-align: left;
+    border-radius: 12px;
 }
 
 .generated-image {
     width: 100%;
-    border-radius: 8px;
+    border-radius: 12px;
     object-fit: cover;
-    min-height: 280px;
+    min-height: 320px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 0.5rem;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.3);
 }
 
 .generated-image.loading {
@@ -154,8 +156,16 @@ input {
 }
 
 .image-card p {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 	font-size: 1rem;
-	font-weight: 600;
+	font-weight: 400;
+    padding: 10px 15px;
+    border-radius: 12px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
 }
 
 /* Footer */

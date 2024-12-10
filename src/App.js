@@ -14,7 +14,7 @@ function App() {
 	const [error, setError] = useState();
 	const [images, setImages] = useState([
 		{
-			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
+			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_128.jpg',
 			'prompt': 'A kitten',
 		},
 	]);
@@ -109,8 +109,8 @@ function App() {
 			<header className="hero">
                 <h1 className="app-title">Artify-AI</h1>
                 <p className="app-description">
-                    Transform your imagination into breathtaking visuals with <b>Artify-AI</b>,
-                    the cutting-edge AI-powered app!
+                    Transform your Imagination into Visuals with <b>Artify-AI</b>,
+                    the Cutting-edge AI-powered App!
                 </p>
             </header>
 
