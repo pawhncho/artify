@@ -14,8 +14,8 @@ function App() {
 	const [error, setError] = useState();
 	const [images, setImages] = useState([
 		{
-			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_128.jpg',
-			'prompt': 'A kitten',
+			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
+			'prompt': 'A Brown Kitten',
 		},
 	]);
 
@@ -30,7 +30,7 @@ function App() {
 		setError('');
 
 		if (prompt.length <= 2) {
-			setError('Text must be more than 2 letters.');
+			setError('Input is required');
 			setLoading(false);
 			return;
 		};
@@ -184,7 +184,10 @@ function Article({ image }) {
 					<div className="image-loader"></div>
 				</div>
 			}
-			<p>{image.prompt}</p>
+			<p className={`${loading && 'loading'}`}>{image.prompt}</p>
+			<div className={`download-image ${loading && 'loading'}`}>
+				<a href={image.image} download={image.prompt}>Download</a>
+			</div>
 		</article>
 	);
 };

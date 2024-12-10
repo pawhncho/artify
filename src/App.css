@@ -25,7 +25,7 @@ input {
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: #fff;
+    color: #f5f5f7;
     padding: 40px 20px;
     text-align: left;
 }
@@ -72,7 +72,7 @@ input {
     border: none;
     border-radius: 8px;
     background: #29293d;
-    color: #fff;
+    color: #f5f5f7;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     outline: none;
 }
@@ -85,7 +85,7 @@ input {
     padding: 15px 30px;
     font-size: 1rem;
     font-weight: 600;
-    color: #fff;
+    color: #f5f5f7;
     background: linear-gradient(135deg, #ff416c, #ff4b2b);
     border: none;
     border-radius: 8px;
@@ -128,13 +128,14 @@ input {
     position: relative;
     text-align: left;
     border-radius: 12px;
+    min-height: 340px;
 }
 
 .generated-image {
     width: 100%;
     border-radius: 12px;
     object-fit: cover;
-    min-height: 320px;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -165,7 +166,36 @@ input {
 	font-weight: 400;
     padding: 10px 15px;
     border-radius: 12px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+}
+
+.image-card p.loading {
+    display: none;
+}
+
+.download-image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 15px 15px;
+    border-radius: 12px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+}
+
+.download-image.loading {
+    display: none;
+}
+
+.download-image a {
+    color: #f5f5f7;
+    text-decoration: none;
 }
 
 /* Footer */
