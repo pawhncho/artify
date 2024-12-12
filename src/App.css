@@ -26,6 +26,7 @@ input {
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #6a11cb, #2575fc);
+    box-shadow: 0 0 1rem 0px #6a11cb;
     color: #f5f5f7;
     padding: 40px 20px;
     border-radius: 8px;
