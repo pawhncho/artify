@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import ReactGA from 'react-ga4';
 import './App.css';
-import logo from './logo.png';
 
 ReactGA.initialize('G-6ZBCKLMD0R');
 ReactGA.send('pageview');
@@ -14,7 +13,7 @@ function App() {
 	const [images, setImages] = useState([
 		{
 			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
-			'prompt': '',
+			'prompt': 'A brown kitten',
 		},
 	]);
 
@@ -53,6 +52,7 @@ function App() {
 
 			const imageUrl = URL.createObjectURL(response.data);
 			setImages(images => [...images, { 'image': imageUrl, 'prompt': prompt }]);
+			setPrompt('');
 		} catch (error) {
 			if (error.response) {
 				if (error.response.status === 400) {
@@ -76,12 +76,21 @@ function App() {
 				setError('Unknown error occured, Try again.');
 			};
 		};
-		setPrompt('');
 		setLoading(false);
 	};
 
 	return (
 		<div className="app">
+			<div className="not-supportive">
+				<div className="icon">🖥️</div>
+				<h1 className="message">Not Supported on Desktop</h1>
+				<p className="detail">
+					Artify-AI is optimized for mobile devices to provide the best experience
+					for our users. Please switch to your phone or tablet to enjoy creating
+					amazing AI-generated art.
+				</p>
+			</div>
+
 			<header className="hero">
                 <h1 className="app-title">Artify-AI</h1>
                 <p className="app-description">
