@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import ReactGA from 'react-ga4';
 import './App.css';
@@ -8,22 +8,15 @@ ReactGA.initialize('G-6ZBCKLMD0R');
 ReactGA.send('pageview');
 
 function App() {
-	const pageSize = useRef(window.innerWidth);
 	const [prompt, setPrompt] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
 	const [images, setImages] = useState([
 		{
 			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
-			'prompt': 'A Brown Kitten',
+			'prompt': '',
 		},
 	]);
-
-	useEffect(() => {
-		window.addEventListener('resize', () => {
-			pageSize.current = window.innerWidth;
-		});
-	}, [pageSize]);
 
 	const generate = async () => {
 		setLoading(true);
@@ -85,23 +78,6 @@ function App() {
 		};
 		setPrompt('');
 		setLoading(false);
-	};
-
-	if (pageSize.current >= 600) {
-		return (
-			<div className="app">
-				<main>
-					<div className="not-supportive">
-						<div className="icon">📱</div>
-						<h1 className="message">Screen Size Not Supported</h1>
-						<p className="detail">
-							This app works on devices with smaller screens.
-							Please switch to a mobile or tablet device for better experience.
-						</p>
-					</div>
-				</main>
-			</div>
-		);
 	};
 
 	return (
@@ -185,9 +161,11 @@ function Article({ image }) {
 				</div>
 			}
 			<p className={`${loading && 'loading'}`}>{image.prompt}</p>
-			<div className={`download-image ${loading && 'loading'}`}>
-				<a href={image.image} download={image.prompt}>Download</a>
-			</div>
+			{/*
+				<div className={`download-image ${loading && 'loading'}`}>
+					<a href={image.image} download={image.prompt}>Download</a>
+				</div>
+			*/}
 		</article>
 	);
 };
