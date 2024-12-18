@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { BsArrowUpShort } from 'react-icons/bs';
 import ReactGA from 'react-ga4';
 import './App.css';
 
@@ -10,12 +11,7 @@ function App() {
 	const [prompt, setPrompt] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
-	const [images, setImages] = useState([
-		{
-			'image': 'https://cdn.pixabay.com/photo/2023/03/28/13/28/ai-generated-7883147_1280.jpg',
-			'prompt': 'A brown kitten',
-		},
-	]);
+	const [chat, setChat] = useState([]);
 
 	const generate = async () => {
 		setLoading(true);
@@ -24,8 +20,12 @@ function App() {
 		if (prompt.length <= 2) {
 			setError('Input is required');
 			setLoading(false);
+			setTimeout(() => setError(''), 3000);
 			return;
 		};
+
+		setChat(prev => [...prev, { role: 'user', content: prompt }]);
+		setPrompt('');
 
 		ReactGA.event({
 			category: 'User Interaction',
@@ -51,8 +51,7 @@ function App() {
 			);
 
 			const imageUrl = URL.createObjectURL(response.data);
-			setImages(images => [...images, { 'image': imageUrl, 'prompt': prompt }]);
-			setPrompt('');
+			setChat(prev => [...prev, { role: 'bot', content: imageUrl }]);
 		} catch (error) {
 			if (error.response) {
 				if (error.response.status === 400) {
@@ -76,6 +75,8 @@ function App() {
 				setError('Unknown error occured, Try again.');
 			};
 		};
+
+		setTimeout(() => setError(''), 3000);
 		setLoading(false);
 	};
 
@@ -91,91 +92,76 @@ function App() {
 				</p>
 			</div>
 
-			<header className="hero">
-                <h1 className="app-title">Artify-AI</h1>
-                <p className="app-description">
-                    Transform your Imagination into Visuals with <b>Artify-AI</b>,
-                    the Cutting-edge AI-powered App!
-                </p>
-            </header>
+			<div className="error">
+            	<div className="error-container">
+            		{error}
+            	</div>
+            </div>
 
-            <main>
-            	<section className="input-section">
-            		<div className="input-error">
-            			{error}
-            		</div>
-                    {
-                    	loading ?
-                    	<input
-	                        type="text"
-	                        placeholder="What are you thinking of..."
-	                        className="prompt-input"
-	                        value={prompt}
-	                        onChange={e => setPrompt(e.target.value)}
-	                        disabled
-	                    /> :
-	                    <input
-	                        type="text"
-	                        placeholder="What are you thinking of..."
-	                        className="prompt-input"
-	                        value={prompt}
-	                        onChange={e => setPrompt(e.target.value)}
-	                    />
-                    }
-                    {
-                    	loading ?
-                    	<button onClick={generate} className="generate-btn" aria-label="Text to Image" disabled>
-	                        <div className="generate-btn-loader"></div>
-	                    </button> :
-	                    <button onClick={generate} className="generate-btn" aria-label="Text to Image">
-	                        Generate Image
-	                    </button>
-                    }
-                </section>
+			{
+				chat.length < 1 &&
+				<div className="hero">
+	                <h1 className="app-title">Artify-AI</h1>
+	                <p className="app-description">
+	                    Transform your Imagination into Visuals with <b>Artify-AI</b>,
+	                    the Cutting-edge AI-powered App!
+	                </p>
+	            </div>
+			}
 
-                <section className="gallery">
-                	<h2 className="visually-hidden">Generated Images</h2>
-                	{
-                		images.slice().reverse().map(image => {
-                			return <Article image={image} />
-                		})
-                	}
-                </section>
-            </main>
+           	<div className="input-section">
+            	<div className="input-form">
+                   	{
+	                   	loading ?
+	                   	<input
+		                 	type="text"
+		                 	placeholder="What are you thinking of..."
+		                 	className="prompt-input"
+		                 	value={prompt}
+		                 	onChange={e => setPrompt(e.target.value)}
+		                 	disabled
+		              	/> :
+		              	<input
+		                 	type="text"
+		                 	placeholder="What are you thinking of..."
+		                 	className="prompt-input"
+		                 	value={prompt}
+		                 	onChange={e => setPrompt(e.target.value)}
+		             	/>
+	               	}
+	               	{
+	                   	loading ?
+	               		<button onClick={generate} className="generate-btn" disabled>
+		                  	<div className="generate-btn-loader"></div>
+		              	</button> :
+		              	<button onClick={generate} className="generate-btn">
+		                 	<BsArrowUpShort />
+		              	</button>
+	               	}
+            	</div>
+         	</div>
 
-            <footer className="footer">
-            	<p>
-            		© 2024 Artify-AI. All Rights Reserved. Built by Pawhncho
-            	</p>
-            </footer>
+        	<div className="gallery">
+               	{ chat.map((message, index) => <Article message={message} index={index} />) }
+           	</div>
 		</div>
 	);
 };
 
-function Article({ image }) {
-	const [loading, setLoading] = useState(true);
-
+function Article({ message, index }) {
 	return (
-		<article className="image-card" aria-label="Generated Image">
-			<img
-				src={image.image}
-				alt={image.prompt}
-				className={`generated-image ${loading && 'loading'}`}
-				onLoad={e => setLoading(false)}
-			/>
+		<div id={index} className={`message-card ${message.role === 'user' ? 'user-card' : 'bot-card'}`}>
 			{
-				loading &&
-				<div className="generated-image">
-					<div className="image-loader"></div>
-				</div>
+				message.role !== 'user' &&
+				<img
+					src={message.content}
+					alt={message.content}
+					className="generated-image"
+				/>
 			}
-			<p className={`${loading && 'loading'}`}>{image.prompt}</p>
-			{/*
-				<div className={`download-image ${loading && 'loading'}`}>
-					<a href={image.image} download={image.prompt}>Download</a>
-				</div>
-			*/}
-		</article>
+			{ message.role !== 'user' && <div className="image-overlay"></div> }
+			{ message.role === 'user' && <p>{message.content}</p> }
+		</div>
 	);
 };
 
