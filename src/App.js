@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { BsArrowUpShort } from 'react-icons/bs';
+import { BsChevronUp, BsArrowBarDown } from 'react-icons/bs';
 import ReactGA from 'react-ga4';
 import './App.css';
 
@@ -9,41 +9,36 @@ ReactGA.send('pageview');
 
 function App() {
 	const [prompt, setPrompt] = useState('');
+	const [submited, setSubmited] = useState(false);
+	const [image, setImage] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState();
-	const [chat, setChat] = useState([]);
+	const [error, setError] = useState('');
 
 	const generate = async () => {
 		setLoading(true);
 		setError('');
 
-		if (prompt.length <= 2) {
-			setError('Input is required');
+		ReactGA.event({category: 'User Interaction', action: 'Clicked Generate Image Button'});
+
+		if (prompt.length < 1) {
+			setError('Invalid input data, Try Again.');
+			setPrompt('');
 			setLoading(false);
-			setTimeout(() => setError(''), 3000);
+			setTimeout(() => setError(''), 10000);
 			return;
 		};
 
-		setChat(prev => [...prev, { role: 'user', content: prompt }]);
-		setPrompt('');
-
-		ReactGA.event({
-			category: 'User Interaction',
-			action: 'Clicked Generate Image Button',
-		});
-
-		const apiUrl = 'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell';
-		const apiToken = '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';
+		setSubmited(true);
 
 		try {
 			const response = await axios.post(
-				apiUrl,
+				'https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell',
 				{
 					inputs: prompt,
 				},
 				{
 					headers: {
-						Authorization: `Bearer ${apiToken}`,
+						Authorization: 'Bearer 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',
 						'Cache-Control': 'no-cache',
 					},
 					responseType: 'blob',
@@ -51,11 +46,11 @@ function App() {
 			);
 
 			const imageUrl = URL.createObjectURL(response.data);
-			setChat(prev => [...prev, { role: 'bot', content: imageUrl }]);
+			setImage(imageUrl);
 		} catch (error) {
 			if (error.response) {
 				if (error.response.status === 400) {
-					setError('Invalid input data.');
+					setError('Invalid input data, Try Again.');
 				} else if (error.response.status === 401) {
 					setError('Invalid authorization token.');
 				} else if (error.response.status === 403) {
@@ -76,38 +71,31 @@ function App() {
 			};
 		};
 
-		setTimeout(() => setError(''), 3000);
+		setTimeout(() => setError(''), 10000);
 		setLoading(false);
 	};
 
 	return (
 		<div className="app">
-			<div className="not-supportive">
-				<div className="icon">🖥️</div>
-				<h1 className="message">Not Supported on Desktop</h1>
-				<p className="detail">
-					Artify-AI is optimized for mobile devices to provide the best experience
-					for our users. Please switch to your phone or tablet to enjoy creating
-					amazing AI-generated art.
-				</p>
-			</div>
+			<div className={`error ${error && 'shown'}`}>
+	            {
+	            	error &&
+	            	<div className="error-container">
+		            	{error}
+		            </div>
+	            }
+	       	</div>
 
-			<div className="error">
-            	<div className="error-container">
-            		{error}
-            	</div>
-            </div>
-
-			{
-				chat.length < 1 &&
-				<div className="hero">
-	                <h1 className="app-title">Artify-AI</h1>
-	                <p className="app-description">
-	                    Transform your Imagination into Visuals with <b>Artify-AI</b>,
-	                    the Cutting-edge AI-powered App!
-	                </p>
-	            </div>
-			}
+			<div className={`hero ${submited && 'slide-up'}`}>
+	           	<h1 className="app-title">Artify-AI</h1>
+	           	{
+	              	!submited &&
+	              	<p className="app-description">
+		            	Transform your Imagination into Visuals with <b>Artify-AI</b>,
+		       			the Cutting-edge AI-powered App!
+		         	</p>
+	           	}
+	      	</div>
 
            	<div className="input-section">
             	<div className="input-form">
@@ -131,36 +119,33 @@ function App() {
 	               	}
 	               	{
 	                   	loading ?
-	               		<button onClick={generate} className="generate-btn" disabled>
-		                  	<div className="generate-btn-loader"></div>
+	               		<button onClick={generate} className={`generate-btn ${'loading'}`} disabled>
+		                  	<BsChevronUp />
 		              	</button> :
 		              	<button onClick={generate} className="generate-btn">
-		                 	<BsArrowUpShort />
+		                 	<BsChevronUp />
 		              	</button>
 	               	}
             	</div>
          	</div>
 
-        	<div className="gallery">
-               	{ chat.map((message, index) => <Article message={message} index={index} />) }
-           	</div>
-		</div>
-	);
-};
-
-function Article({ message, index }) {
-	return (
-		<div id={index} className={`message-card ${message.role === 'user' ? 'user-card' : 'bot-card'}`}>
-			{
-				message.role !== 'user' &&
-				<img
-					src={message.content}
-					alt={message.content}
-					className="generated-image"
-				/>
-			}
-			{ message.role !== 'user' && <div className="image-overlay"></div> }
-			{ message.role === 'user' && <p>{message.content}</p> }
+			<div className={`image-card ${submited && 'shown'}`}>
+				{
+					image &&
+					<div className="image-container">
+						<img className="generated-image" src={image} alt={prompt} />
+						<span className="generated-image-overlay"></span>
+					</div>
+				}
+				{ !image && <div className="generated-image-loader"></div> }
+				{
+					image &&
+					<a className="download-button" href={image} download={`${prompt}.jpg`}>
+						<h6>Download</h6>
+						<BsArrowBarDown />
+					</a>
+				}
+			</div>
 		</div>
 	);
 };
